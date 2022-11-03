@@ -1,0 +1,27 @@
+name: checkout-commit-push
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: Checkout, Commit and Push
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout the project
+        uses: actions/checkout@v3
+
+      - name: Add new report
+        run: |
+          folder=$(date +%s)
+          date > "reports/$folder"
+
+      - name: Commit and Push
+        run: |
+          message="Report generated at $(date +%s)"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add folder
+          git commit -m $message
+          git push
+
+      
