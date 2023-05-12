@@ -31,7 +31,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.\n $(date +%s)"); then
+          pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.\n $(date +%s)")
+
+          if [[ -n "$pull_request_url" ]]; then
             echo "pull_request_url=$pull_request_url" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -47,6 +49,7 @@ jobs:
           payload: |
             {
               "job_status": "${{ job.status }}",
+              "job_status_emoji": ":tails-success:",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
               "pull_request_url": "${{ steps.pr-create.outputs.pull_request_url }}",
               "commit_url": "${{ github.event.head_commit.url }}"
