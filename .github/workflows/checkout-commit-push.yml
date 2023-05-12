@@ -2,7 +2,7 @@ name: checkout-commit-push
 on:
   workflow_dispatch:
 jobs:
-  checkout_commit_push:
+  checkout-commit-push:
     name: Checkout, Commit and Push
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -27,28 +27,25 @@ jobs:
           git push
       
       - name: Create a PR
+        id: pr-create
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.
+          echo `pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.
           $(date +%s) 
-          ") >> "$GITHUB_OUTPUT"
-
-  notify:
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs: checkout_commit_push
-    steps:
+          ")` >> "$GITHUB_OUTPUT"
+          
       - name: Send GitHub Action trigger data to Slack workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         id: slack
+        if: ${{ always() }}
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
             {
               "job_status": "${{ job.status }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "pull_request_url": "${{ needs.checkout_commit_push.outputs.pull_request_url }}",
+              "pull_request_url": "${{ steps.pr-create.outputs.pull_request_url }}",
               "commit_url": "${{ github.event.head_commit.url }}"
             }
