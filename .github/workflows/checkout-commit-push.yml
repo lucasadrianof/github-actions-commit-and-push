@@ -49,6 +49,6 @@ jobs:
             {
               "job_status": "${{ job.status }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "pull_request_url": "${{ jobs.checkout_commit_push.outputs.pull_request_url }}",
+              "pull_request_url": "${{ needs.checkout_commit_push.outputs.pull_request_url }}",
               "commit_url": "${{ github.event.head_commit.url }}"
             }
