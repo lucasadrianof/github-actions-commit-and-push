@@ -35,8 +35,10 @@ jobs:
 
           if [[ -n "$pull_request_url" ]]; then
             echo "pull_request_url=$pull_request_url" >> "$GITHUB_OUTPUT"
+            echo 'job_status_emoji=":tails-success:"' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo 'job_status_emoji=":tails-sad:"' >> "$GITHUB_OUTPUT"
           exit 1
           
       - name: Send GitHub Action trigger data to Slack workflow
@@ -49,7 +51,7 @@ jobs:
           payload: |
             {
               "job_status": "${{ job.status }}",
-              "job_status_emoji": ":tails-success:",
+              "job_status_emoji": "${{ steps.pr-create.outputs.job_status_emoji }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
               "pull_request_url": "${{ steps.pr-create.outputs.pull_request_url }}",
               "commit_url": "${{ github.event.head_commit.url }}"
