@@ -27,12 +27,13 @@ jobs:
           git push
       
       - name: Create a PR
+        id: pr_create
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.
+          echo pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.
           $(date +%s) 
-          "
+          ") >> "$GITHUB_OUTPUT"
           
       - name: Send GitHub Action trigger data to Slack workflow
         env:
@@ -45,6 +46,6 @@ jobs:
             {
               "job_status": "${{ job.status }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "pull_request_url": "${{ github.event.pull_request.html_url }}",
+              "pull_request_url": "${{ steps.create_pr.outputs.pull_request_url }}",
               "commit_url": "${{ github.event.head_commit.url }}"
             }
