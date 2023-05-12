@@ -31,9 +31,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo `pull_request_url=$(gh pr create -B main -t "New Report" -b "Adding a new report automatically generated.
+          echo "pull_request_url=$(gh pr create -B main -t \"New Report\" -b \"Adding a new report automatically generated.
           $(date +%s) 
-          ")` >> "$GITHUB_OUTPUT"
+          \")" >> "$GITHUB_OUTPUT"
           
       - name: Send GitHub Action trigger data to Slack workflow
         env:
