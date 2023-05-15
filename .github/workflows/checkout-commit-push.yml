@@ -51,7 +51,11 @@ jobs:
       - name: Adjust the env variables
         id: adjust-env-vars
         run: |
-          echo "job_status_emoji=$([[ needs.checkout-commit-push.outputs.job_status == 'failure' ]] && echo :tails-success: || echo :tails-sad:)" >> "$GITHUB_OUTPUT"
+          if [[ needs.checkout-commit-push.outputs.job_status == "success" ]]; then
+            echo "job_status_emoji=:tails-success:" >> "$GITHUB_OUTPUT"
+          else
+            echo "job_status_emoji=:tails-sad:" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Send GitHub Action trigger data to Slack workflow
         env:
