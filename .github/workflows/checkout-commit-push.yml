@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      job_status: ${{ job.status }}
       pull_request_url: ${{ steps.pr-create.outputs.pull_request_url }}
 
     steps:
@@ -51,7 +50,7 @@ jobs:
       - name: Adjust the env variables
         id: adjust-env-vars
         run: |
-          if [[ needs.checkout-commit-push.outputs.job_status == "success" ]]; then
+          if [[ needs.checkout-commit-push.result == "success" ]]; then
             echo "job_status_emoji=:tails-success:" >> "$GITHUB_OUTPUT"
           else
             echo "job_status_emoji=:tails-sad:" >> "$GITHUB_OUTPUT"
@@ -65,7 +64,7 @@ jobs:
         with:
           payload: |
             {
-              "job_status": "${{ needs.checkout-commit-push.outputs.job_status }}",
+              "job_status": "${{ needs.checkout-commit-push.result }}",
               "job_status_emoji": "${{ steps.adjust-env-vars.outputs.job_status_emoji }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
               "pull_request_url": "${{ needs.checkout-commit-push.outputs.pull_request_url }}",
