@@ -50,8 +50,7 @@ jobs:
       - name: Adjust the env variables
         id: adjust-env-vars
         run: |
-          echo "$needs.checkout-commit-push.result"
-          if [[ "$needs.checkout-commit-push.result" == "success" ]]; then
+          if [[ "${{ needs.checkout-commit-push.result }}" == "success" ]]; then
             echo "job_status_emoji=:tails-success:" >> "$GITHUB_OUTPUT"
           else
             echo "job_status_emoji=:tails-sad:" >> "$GITHUB_OUTPUT"
