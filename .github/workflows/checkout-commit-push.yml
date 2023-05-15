@@ -28,7 +28,7 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add reports/
           git commit -m "$message"
-          # git push
+          git push
       
       - name: Create a PR
         id: pr-create
@@ -51,7 +51,7 @@ jobs:
       - name: Adjust the env variables
         id: adjust-env-vars
         run: |
-          echo "job_status_emoji=$([[ needs.checkout-commit-push.outputs.job_status == \"failure\" ]] && echo \":tails-success:\" || echo \":tails-sad:\")" >> "$GITHUB_OUTPUT"
+          echo "job_status_emoji=$([[ needs.checkout-commit-push.outputs.job_status == 'failure' ]] && echo :tails-success: || echo :tails-sad:)" >> "$GITHUB_OUTPUT"
 
       - name: Send GitHub Action trigger data to Slack workflow
         env:
