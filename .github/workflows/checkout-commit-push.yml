@@ -52,10 +52,10 @@ jobs:
         id: set-payload-vars
         run: |
           if [[ "${{ needs.checkout-commit-push.result }}" == "success" ]]; then
-            echo "job_status_emoji=:success:" >> "$GITHUB_OUTPUT"
+            echo "job_status_emoji=:tails-success:" >> "$GITHUB_OUTPUT"
             echo "job_status_message=Pull request ready for review at: ${{ needs.checkout-commit-push.outputs.pull_request_url }}. Please review and merge it at your earliest convenience" >> "$GITHUB_OUTPUT"
           else
-            echo "job_status_emoji=:oh-no:" >> "$GITHUB_OUTPUT"
+            echo "job_status_emoji=:tails-sad:" >> "$GITHUB_OUTPUT"
             echo "job_status_message=Something went wrong while running the action, please check the job logs for more info. " >> "$GITHUB_OUTPUT"
           fi
 
