@@ -6,6 +6,10 @@ jobs:
     name: Checkout, Commit and Push
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    outputs:
+      job_status: ${{ job.status }}
+      pull_request_url: ${{ steps.pr-create.outputs.pull_request_url }}
+
     steps:
       - name: Checkout the project
         uses: actions/checkout@v3
@@ -47,7 +51,7 @@ jobs:
       - name: Adjust the env variables
         id: adjust-env-vars
         run: |
-          echo "job_status_emoji=$([[ jobs.checkout-commit-push.result == \"failure\" ]] && echo \":tails-success:\" || echo \":tails-sad:\")" >> "$GITHUB_OUTPUT"
+          echo "job_status_emoji=$([[ needs.checkout-commit-push.outputs.job_status == \"failure\" ]] && echo \":tails-success:\" || echo \":tails-sad:\")" >> "$GITHUB_OUTPUT"
 
       - name: Send GitHub Action trigger data to Slack workflow
         env:
@@ -57,7 +61,7 @@ jobs:
         with:
           payload: |
             {
-              "job_status": "${{ jobs.checkout-commit-push.result }}",
+              "job_status": "${{ needs.checkout-commit-push.outputs.job_status }}",
               "job_status_emoji": "${{ steps.adjust-env-vars.outputs.job_status_emoji }}",
               "job_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
               "pull_request_url": "${{ needs.checkout-commit-push.outputs.pull_request_url }}",
